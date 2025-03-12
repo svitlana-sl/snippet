@@ -12,11 +12,15 @@ function decodeCode(encoded: string): string {
 }
 
 // create snippet (POST /api/snippets)
-export const createSnippet = async (req: Request, res: Response) => {
+export const createSnippet = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const { title, code, language, tags, expiresIn } = req.body;
     if (!title || !code || !language) {
-      return res.status(400).json({ error: "Missing required fields" });
+      res.status(400).json({ error: "Missing required fields" });
+      return;
     }
     const encodedCode = encodeCode(code);
     let expiresAt;
@@ -30,15 +34,20 @@ export const createSnippet = async (req: Request, res: Response) => {
       tags,
       expiresAt,
     });
-    return res.status(201).json(snippet);
+    res.status(201).json(snippet);
+    return;
   } catch (error) {
     console.error("createSnippet error:", error);
-    return res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ error: "Internal server error" });
+    return;
   }
 };
 
 // get all snippets (GET /api/snippets)
-export const getAllSnippets = async (req: Request, res: Response) => {
+export const getAllSnippets = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const {
       language,
@@ -78,44 +87,58 @@ export const getAllSnippets = async (req: Request, res: Response) => {
       ...snippet.toObject(),
       code: decodeCode(snippet.code),
     }));
-    return res.json(decodedSnippets);
+    res.json(decodedSnippets);
+    return;
   } catch (error) {
     console.error("getAllSnippets error:", error);
-    return res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ error: "Internal server error" });
+    return;
   }
 };
 
 // get snippet by ID (GET /api/snippets/:id)
-export const getSnippetById = async (req: Request, res: Response) => {
+export const getSnippetById = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const { id } = req.params;
     if (!Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ error: "Invalid ID" });
+      res.status(400).json({ error: "Invalid ID" });
+      return;
     }
     const snippet = await Snippet.findById(id);
     if (!snippet) {
-      return res.status(404).json({ error: "Snippet not found" });
+      res.status(404).json({ error: "Snippet not found" });
+      return;
     }
     if (snippet.expiresAt && snippet.expiresAt.getTime() < Date.now()) {
-      return res.status(404).json({ error: "Snippet has expired" });
+      res.status(404).json({ error: "Snippet has expired" });
+      return;
     }
     const decodedSnippet = {
       ...snippet.toObject(),
       code: decodeCode(snippet.code),
     };
-    return res.json(decodedSnippet);
+    res.json(decodedSnippet);
+    return;
   } catch (error) {
     console.error("getSnippetById error:", error);
-    return res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ error: "Internal server error" });
+    return;
   }
 };
 
 // updated snippet (PUT /api/snippets/:id)
-export const updateSnippet = async (req: Request, res: Response) => {
+export const updateSnippet = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const { id } = req.params;
     if (!Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ error: "Invalid ID" });
+      res.status(400).json({ error: "Invalid ID" });
+      return;
     }
     const { title, code, language, tags, expiresIn } = req.body;
     let encodedCode;
@@ -136,29 +159,39 @@ export const updateSnippet = async (req: Request, res: Response) => {
       new: true,
     });
     if (!snippet) {
-      return res.status(404).json({ error: "Snippet not found" });
+      res.status(404).json({ error: "Snippet not found" });
+      return;
     }
-    return res.json(snippet);
+    res.json(snippet);
+    return;
   } catch (error) {
     console.error("updateSnippet error:", error);
-    return res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ error: "Internal server error" });
+    return;
   }
 };
 
 // delete snippet (DELETE /api/snippets/:id)
-export const deleteSnippet = async (req: Request, res: Response) => {
+export const deleteSnippet = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const { id } = req.params;
     if (!Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ error: "Invalid ID" });
+      res.status(400).json({ error: "Invalid ID" });
+      return;
     }
     const snippet = await Snippet.findByIdAndDelete(id);
     if (!snippet) {
-      return res.status(404).json({ error: "Snippet not found" });
+      res.status(404).json({ error: "Snippet not found" });
+      return;
     }
-    return res.json({ message: "Snippet deleted successfully" });
+    res.json({ message: "Snippet deleted successfully" });
+    return;
   } catch (error) {
     console.error("deleteSnippet error:", error);
-    return res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ error: "Internal server error" });
+    return;
   }
 };
