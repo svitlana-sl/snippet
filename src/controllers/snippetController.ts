@@ -120,9 +120,15 @@ export const getSnippetById = async (
       res.status(404).json({ error: "Snippet has expired" });
       return;
     }
+
     const decodedSnippet = {
       ...snippet.toObject(),
       code: decodeCode(snippet.code),
+
+      versions: snippet.versions?.map((version) => ({
+        code: decodeCode(version.code),
+        updatedAt: version.updatedAt,
+      })),
     };
     res.json(decodedSnippet);
     return;
