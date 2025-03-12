@@ -1,3 +1,5 @@
+// public/js/dashboard.js
+
 async function loadSnippets(url) {
   try {
     const response = await fetch(url);
@@ -30,21 +32,37 @@ async function loadSnippets(url) {
   }
 }
 
+// Обробка події сабміту форми
 document.getElementById("filterForm").addEventListener("submit", (e) => {
-  e.preventDefault();
+  e.preventDefault(); // Запобігаємо стандартній відправці форми
 
+  // Отримуємо значення dropdown для мови
   const language = document.getElementById("language").value;
-  const tags = document.getElementById("tags").value;
 
+  // Для тегів – отримуємо всі обрані варіанти та формуємо рядок через кому
+  const tagsSelect = document.getElementById("tags");
+  const selectedTags = Array.from(tagsSelect.selectedOptions).map(
+    (option) => option.value
+  );
+  let tags = selectedTags.join(",");
+
+  // Формуємо URL з параметрами (якщо обрано значення)
   let url = "/api/snippets";
-  let query = [];
-  if (language) query.push(`language=${encodeURIComponent(language)}`);
-  if (tags) query.push(`tags=${encodeURIComponent(tags)}`);
-  if (query.length) url += "?" + query.join("&");
+  let queryParams = [];
+  if (language) {
+    queryParams.push(`language=${encodeURIComponent(language)}`);
+  }
+  if (tags) {
+    queryParams.push(`tags=${encodeURIComponent(tags)}`);
+  }
+  if (queryParams.length > 0) {
+    url += "?" + queryParams.join("&");
+  }
 
   loadSnippets(url);
 });
 
+// Завантаження всіх сніпетів при завантаженні сторінки
 window.addEventListener("DOMContentLoaded", () => {
   loadSnippets("/api/snippets");
 });

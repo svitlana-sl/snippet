@@ -9,16 +9,46 @@
     <h1>Code Snippets</h1>
 
     <form id="filterForm">
-      <label for="language">Language:</label>
-      <input type="text" name="language" id="language" placeholder="Python" />
+      <div>
+        <label for="language">Language:</label>
+        <select name="language" id="language">
+          <option value="">--Select Language--</option>
+          <option value="JavaScript">JavaScript</option>
+          <option value="Python">Python</option>
+          <option value="SQL">SQL</option>
+          <option value="Go">Go</option>
+          <option value="Rust">Rust</option>
+          <option value="C++">C++</option>
+          <option value="Bash">Bash</option>
+          <option value="Swift">Swift</option>
+        </select>
+      </div>
 
-      <br />
+      <div>
+        <label for="tags">Tags:</label>
+        <select name="tags" id="tags" multiple size="4">
+          <option value="async">async</option>
+          <option value="fetch">fetch</option>
+          <option value="React">React</option>
+          <option value="component">component</option>
+          <option value="list">list</option>
+          <option value="comprehension">comprehension</option>
+          <option value="database">database</option>
+          <option value="query">query</option>
+          <option value="goroutine">goroutine</option>
+          <option value="concurrency">concurrency</option>
+          <option value="struct">struct</option>
+          <option value="data">data</option>
+          <option value="lambda">lambda</option>
+          <option value="functional">functional</option>
+          <option value="shell">shell</option>
+          <option value="closure">closure</option>
+        </select>
+      </div>
 
-      <label for="tags">Tags (comma-separated):</label>
-      <input type="text" name="tags" id="tags" placeholder="async,fetch" />
-
-      <br />
-      <button type="submit">Filter</button>
+      <div>
+        <button type="submit">Filter</button>
+      </div>
     </form>
 
     <hr />
