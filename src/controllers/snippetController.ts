@@ -22,7 +22,10 @@ export const createSnippet = async (
       res.status(400).json({ error: "Missing required fields" });
       return;
     }
+    // Ensure that the code is encoded in base64 to avoid issues with double quotes etc.
     const encodedCode = encodeCode(code);
+    console.log("Encoded code:", encodedCode);
+
     let expiresAt;
     if (expiresIn) {
       expiresAt = new Date(Date.now() + expiresIn * 1000);
@@ -34,6 +37,7 @@ export const createSnippet = async (
       tags,
       expiresAt,
     });
+
     res.status(201).json(snippet);
     return;
   } catch (error) {
