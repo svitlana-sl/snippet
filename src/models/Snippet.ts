@@ -1,13 +1,19 @@
 import { Schema, model, Document } from "mongoose";
 
+export interface IVersion {
+  code: string;
+  updatedAt: Date;
+}
+
 export interface ISnippet extends Document {
   title: string;
-  code: string; //saved in base64
+  code: string;
   language: string;
   tags: string[];
+  expiresAt?: Date;
+  versions?: IVersion[];
   createdAt: Date;
   updatedAt: Date;
-  expiresAt?: Date; // date when snippet expires
 }
 
 const snippetSchema = new Schema<ISnippet>(
@@ -17,6 +23,12 @@ const snippetSchema = new Schema<ISnippet>(
     language: { type: String, required: true },
     tags: [{ type: String }],
     expiresAt: { type: Date },
+    versions: [
+      {
+        code: { type: String, required: true },
+        updatedAt: { type: Date, default: Date.now },
+      },
+    ],
   },
   { timestamps: true }
 );
