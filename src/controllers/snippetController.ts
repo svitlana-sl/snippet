@@ -144,29 +144,33 @@ export const updateSnippet = async (
       res.status(400).json({ error: "Invalid ID" });
       return;
     }
+
     const { title, code, language, tags, expiresIn } = req.body;
-    let encodedCode;
-    if (code) {
-      encodedCode = encodeCode(code);
-    }
-    let expiresAt;
-    if (expiresIn) {
-      expiresAt = new Date(Date.now() + expiresIn * 1000);
-    }
-    const updateData: any = {};
-    if (title) updateData.title = title;
-    if (encodedCode) updateData.code = encodedCode;
-    if (language) updateData.language = language;
-    if (tags) updateData.tags = tags;
-    if (expiresAt) updateData.expiresAt = expiresAt;
-    const snippet = await Snippet.findByIdAndUpdate(id, updateData, {
-      new: true,
-    });
+
+    const snippet = await Snippet.findById(id);
     if (!snippet) {
       res.status(404).json({ error: "Snippet not found" });
       return;
     }
-    res.json(snippet);
+
+    if (code && code !== decodeCode(snippet.code)) {
+      const currentVersion = { code: snippet.code, updatedAt: new Date() };
+      snippet.versions = snippet.versions
+        ? [...snippet.versions, currentVersion]
+        : [currentVersion];
+
+      snippet.code = encodeCode(code);
+    }
+
+    if (title) snippet.title = title;
+    if (language) snippet.language = language;
+    if (tags) snippet.tags = tags;
+    if (expiresIn) {
+      snippet.expiresAt = new Date(Date.now() + expiresIn * 1000);
+    }
+
+    const updatedSnippet = await snippet.save();
+    res.json(updatedSnippet);
     return;
   } catch (error) {
     console.error("updateSnippet error:", error);
