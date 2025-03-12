@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Code Snippets Dashboard</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+  <body>
+    <h1>Code Snippets</h1>
+
+    <form method="GET" action="/api/snippets">
+      <label for="language">Language:</label>
+      <input
+        type="text"
+        name="language"
+        id="language"
+        placeholder="JavaScript"
+      />
+      <br />
+
+      <label for="tags">Tags (comma-separated):</label>
+      <input type="text" name="tags" id="tags" placeholder="async,fetch" />
+      <br />
+
+      <button type="submit">Filter</button>
+    </form>
+
+    <hr />
+
+    <div id="snippets-container"></div>
+
+    <script src="/js/dashboard.js"></script>
+  </body>
+</html>
