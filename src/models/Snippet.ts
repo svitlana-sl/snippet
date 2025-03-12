@@ -7,7 +7,7 @@ export interface ISnippet extends Document {
   tags: string[];
   createdAt: Date;
   updatedAt: Date;
-  expiresAt?: Date; // date when snippet expires (if required)
+  expiresAt?: Date; // date when snippet expires
 }
 
 const snippetSchema = new Schema<ISnippet>(
