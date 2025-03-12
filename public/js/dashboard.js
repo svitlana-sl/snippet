@@ -1,5 +1,3 @@
-// public/js/dashboard.js
-
 async function loadSnippets(url) {
   try {
     const response = await fetch(url);
@@ -32,21 +30,17 @@ async function loadSnippets(url) {
   }
 }
 
-// Обробка події сабміту форми
 document.getElementById("filterForm").addEventListener("submit", (e) => {
-  e.preventDefault(); // Запобігаємо стандартній відправці форми
+  e.preventDefault();
 
-  // Отримуємо значення dropdown для мови
   const language = document.getElementById("language").value;
 
-  // Для тегів – отримуємо всі обрані варіанти та формуємо рядок через кому
   const tagsSelect = document.getElementById("tags");
   const selectedTags = Array.from(tagsSelect.selectedOptions).map(
     (option) => option.value
   );
   let tags = selectedTags.join(",");
 
-  // Формуємо URL з параметрами (якщо обрано значення)
   let url = "/api/snippets";
   let queryParams = [];
   if (language) {
@@ -62,7 +56,6 @@ document.getElementById("filterForm").addEventListener("submit", (e) => {
   loadSnippets(url);
 });
 
-// Завантаження всіх сніпетів при завантаженні сторінки
 window.addEventListener("DOMContentLoaded", () => {
   loadSnippets("/api/snippets");
 });
